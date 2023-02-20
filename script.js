@@ -1,6 +1,8 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const clearBtn = document.getElementById('clear');
+const itemFilter = document.getElementById('filter');
 
 function addItem(e) {
     e.preventDefault();
@@ -19,7 +21,7 @@ function addItem(e) {
     li.appendChild(button);
 
     itemList.appendChild(li);
-
+    checkUI();
     itemInput.value = '';
 }
 
@@ -31,11 +33,45 @@ function createButton(classes) {
     return button;
 }
 
-function createIcon(classes) {
+function createIcon(classes) { 
     const icon = document.createElement('i');
     icon.className = classes;
     return icon;
 }
 
+function removeItem(e) {
+    if (e.target.tagName === "I") {
+        if (confirm('Are you sure?')) {
+            e.target.parentElement.parentElement.remove();
+
+            checkUI();
+        }
+    }
+}
+
+function clearAll() {
+    while (itemList.firstChild) {
+        itemList.firstChild.remove();
+    }
+
+    checkUI();
+}
+
+function checkUI() {
+    const items = itemList.querySelectorAll('li');
+    if (items.length === 0) {
+        clearBtn.style.display = 'none';
+        itemFilter.style.display = 'none';
+    } else {
+        clearBtn.style.display = 'block';
+        itemFilter.style.display = 'block';
+    }
+}
+
 // Event Listeners
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
+clearBtn.addEventListener('click', clearAll);
+
+checkUI();
+
